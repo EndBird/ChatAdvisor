@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+<body>
+    <form  asp-action="Login" method="post">
+        <div>Username: <input name="username" type="text" /></div>
+        
+        Password: <input name="pass" type="password" />
+        <div class="form-group">
+            <input type="submit" value="Login" class="btn btn-default" />
+        </div>
+    </form>
+    <div>
+        @if(ViewData.Keys.Contains("account status")) {
+             <div>
+                 @ViewData["account status"]
+             </div>
+
+            } 
+    </div>
+
+</body>

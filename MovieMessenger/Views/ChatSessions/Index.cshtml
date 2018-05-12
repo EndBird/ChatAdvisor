@@ -1,0 +1,71 @@
+﻿@model IEnumerable<MovieMessenger.Models.ChatSession>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<head>
+    <style>
+        #ChatSession {
+            text-align: justify;
+            text-justify: inter-word;
+        }
+    </style>
+</head>
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.From)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.To)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Chat) 
+                </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.From)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.To)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Chat)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<body>
+    <div id ="ChatSession" style="border-color:blue; width:150px;height:150px;overflow:auto;padding:5px;">
+        
+    </div>
+
+    <input name="message" id="message" type="text" /><button onclick="sendMessage()" id="SendMessage" type="submit">Send</button>
+    <script>
+        function sendMessage() {
+            document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + "@ViewData["user"]" + ": "+ document.getElementById("message").value;
+            document.getElementById("message").value= "";
+            var element = document.getElementById("ChatSession");
+            element.scrollTop = element.scrollHeight - element.clientHeight;
+
+        }
+
+    </script>
+</body>
