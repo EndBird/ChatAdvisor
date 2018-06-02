@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieMessenger.Models;
-
+using System.Web.Mvc;
 namespace MovieMessenger.Controllers
 {
-    public class LoginsController : Controller
+    public class LoginsController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly MovieMessengerContext _context;
 
@@ -21,7 +21,8 @@ namespace MovieMessenger.Controllers
             return View("/Views/Logins/Login.cshtml");
         }
 
-        [HttpPost]
+        [Microsoft.AspNetCore.Mvc.HttpGet]
+        [Microsoft.AspNetCore.Mvc.Route("ChatSessions")]
         public async Task<IActionResult> Login(string username, string pass)
         {
             DbSet<Account> x = _context.Account;
@@ -29,8 +30,11 @@ namespace MovieMessenger.Controllers
             {
                 if (account.Username == username & account.Password == pass)
                 {
+
+
                     ViewData["user"] = username;
                     return View("/Views/ChatSessions/ChatsList.cshtml", await _context.ChatSession.ToListAsync());
+
                 }
             }
             ViewData["account status"] = "account does not exist";

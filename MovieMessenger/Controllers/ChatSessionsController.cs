@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
 using MovieMessenger.Models;
 
@@ -17,6 +18,7 @@ namespace MovieMessenger.Controllers
         {
             _context = context;
         }
+        
 
         // GET: ChatSessions
         public async Task<IActionResult> Index()
@@ -149,20 +151,28 @@ namespace MovieMessenger.Controllers
             return _context.ChatSession.Any(e => e.ID == id);
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult OpenChat(string From)
         {
-            DbSet<ChatSession> chats = _context.ChatSession;
-            foreach (ChatSession chat in chats)
+            if (From == null)
             {
-                if (chat.From == From)
+                IEnumerable<ChatSession> chatFrom = new ChatSession[] {};
+                return View("/Views/ChatSessions/Chat.cshtml", chatFrom);
+            }   
+            else
+            {
+                DbSet<ChatSession> chats = _context.ChatSession;
+                foreach (ChatSession chat in chats)
                 {
-                    IEnumerable<ChatSession> chatFrom = new ChatSession[] { chat };
-                    return View(chatFrom);
+                    if (chat.From == From)
+                    {
+                        IEnumerable<ChatSession> chatFrom = new ChatSession[] { chat };
+                        return View("/Views/ChatSessions/Chat.cshtml", chatFrom);
+                    }
                 }
+                return View("/Views/ChatSessions/Chat.cshtml");
             }
-            return View();
-
         }
-    }
+ 
+    }   
 }

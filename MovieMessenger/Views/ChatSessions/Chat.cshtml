@@ -1,31 +1,67 @@
 ﻿@model IEnumerable<MovieMessenger.Models.ChatSession>
+<script type="text/javascript">
+    var initChat = "";
+    var froom = "";
+    var chatTitle = "Chat";
 
-@{
-    ViewData["Title"] = "Chat";
-}
+    @foreach (var item in Model)
+    {
+        <text>
+            initChat = item.Chat;
+            froom = item.From;
+        </text>
+    }
+    if (initChat) {
+        document.getElementById("ChatSession").innerHTML = initChat;
+    }
+    else {//new chat
+        var froom = "Ong Tu";//dummy user for now.
+
+
+    }
+
+</script>
+
+@ViewData["Title"] = chatTitle;
 
 <h2>Chat</h2>
+<html>
+
 <body>
     <div id="ChatSession" style="border-color:blue; width:150px;height:150px;overflow:auto;padding:5px;">
 
     </div>
-
-    <input name="message" id="message" type="text" /><button onclick="sendMessage()" id="SendMessage" type="submit">Send</button>
-    <script>
-        
-        @foreach (var item in Model) {
-            @Html.Raw("var initChat") = item.Chat;
-                }
-        function sendMessage() {
-            document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + "@ViewData["user"]" + ": "+ document.getElementById("message").value;
-            document.getElementById("message").value= "";
-            var element = document.getElementById("ChatSession");
-            element.scrollTop = element.scrollHeight - element.clientHeight;
-
-        }
-
-    </script>
-
     
 
+            <input name="message" id="message" type="text" />
+            <button onclick="sendMessage()" id="SendMessage" type="submit">Send</button>
+            <button type="submit" asp-action="Save" >Save Chat</button>
+
+            <script type="text/javascript">
+
+        
+
+                
+           //use javascript dictionary
+            var sendMessage=  function() {
+
+                document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + @ViewData["user"] + ": " + document.getElementById("message").value;
+                document.getElementById("message").value = "";
+                var element = document.getElementById("ChatSession");
+                element.scrollTop = element.scrollHeight - element.clientHeight;
+               
+
+            };
+                     
+            
+
+
+
+
+            </script>
+
+
+
 </body>
+
+</html>

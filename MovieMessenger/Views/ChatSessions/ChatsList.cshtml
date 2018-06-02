@@ -3,31 +3,56 @@
 @{
     ViewData["Title"] = "ChatsList";
 }
+<head>
+    <script>
 
+    </script>
+</head>
 <h2>ChatsList</h2>
-<p>
-    <a asp-action="Create">New Chat</a>
-</p>
+<div>
+    @{
+        var parms = new Dictionary<string, string>
+{
+    { "From", null },
+
+};
+    }
+    @Html.ActionLink("New Chat",
+    "OpenChat",
+     "ChatSessions",
+      new { From = "" }, null)
+
+</div>
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.From)
             </th>
-            
+
             <th></th>
         </tr>
     </thead>
     <tbody>
+
         @foreach (var item in Model)
         {
+            
+            var writer = new System.IO.StringWriter();
+            Html.DisplayFor(modelItem => item.From).WriteTo(writer, HtmlEncoder);
+            var params0 = new Dictionary<string, string>
+    {
+        { "From",writer.ToString()},
+
+     };
             <tr>
                 <td>
-                    <a asp-action="OpenChat"> @Html.DisplayFor(modelItem => item.From)</a>
+
+                    <a asp-action="OpenChat" asp-all-route-data="params0"> @Html.DisplayFor(modelItem => item.From)</a>
                 </td>
-                
+
                 <td>
-                    
+
                     <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
                 </td>
             </tr>
