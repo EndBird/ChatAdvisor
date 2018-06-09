@@ -27,6 +27,7 @@ namespace MovieMessenger.Controllers
         }
 
         // GET: ChatSessions/Details/5
+        /*
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -43,7 +44,7 @@ namespace MovieMessenger.Controllers
 
             return View(chatSession);
         }
-
+        */
         // GET: ChatSessions/Create
         public IActionResult Create()
         {
@@ -67,6 +68,7 @@ namespace MovieMessenger.Controllers
         }
 
         // GET: ChatSessions/Edit/5
+        /*
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,12 +83,13 @@ namespace MovieMessenger.Controllers
             }
             return View(chatSession);
         }
-
+        */
         // POST: ChatSessions/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        /*
         public async Task<IActionResult> Edit(int id, [Bind("ID,From,To,Chat")] ChatSession chatSession)
         {
             if (id != chatSession.ID)
@@ -116,17 +119,17 @@ namespace MovieMessenger.Controllers
             }
             return View(chatSession);
         }
-
+        */
         // GET: ChatSessions/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string relation)
         {
-            if (id == null)
+            if (relation == null)
             {
                 return NotFound();
             }
 
             var chatSession = await _context.ChatSession
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .SingleOrDefaultAsync(m => m.ToString() == relation);
             if (chatSession == null)
             {
                 return NotFound();
@@ -152,24 +155,26 @@ namespace MovieMessenger.Controllers
         }
 
         [HttpGet]
-        public IActionResult OpenChat(string From)
+        public IActionResult OpenChat(string To, string From)
         {
-            if (From == null)
+            if (To == null)
             {
-                IEnumerable<ChatSession> chatFrom = new ChatSession[] {};
-                return View("/Views/ChatSessions/Chat.cshtml", chatFrom);
+                
+                IEnumerable<ChatSession> chat = new ChatSession[] {};
+                return View("/Views/ChatSessions/Chat.cshtml", chat);
             }   
             else
             {
                 DbSet<ChatSession> chats = _context.ChatSession;
                 foreach (ChatSession chat in chats)
                 {
-                    if (chat.From == From)
+                    if (chat.To == To && chat.From==From)
                     {
-                        IEnumerable<ChatSession> chatFrom = new ChatSession[] { chat };
-                        return View("/Views/ChatSessions/Chat.cshtml", chatFrom);
+                        IEnumerable<ChatSession> chatTo = new ChatSession[] { chat };
+                        return View("/Views/ChatSessions/Chat.cshtml", chatTo);
                     }
                 }
+                IEnumerable<ChatSession> newChat = new ChatSession[] {new ChatSession() }; //what to put for new chat?
                 return View("/Views/ChatSessions/Chat.cshtml");
             }
         }

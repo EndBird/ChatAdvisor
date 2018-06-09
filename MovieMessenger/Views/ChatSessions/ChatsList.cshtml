@@ -5,22 +5,17 @@
 }
 <head>
     <script>
-
+        document.cookie = "username=@ViewData["user"]";
     </script>
 </head>
 <h2>ChatsList</h2>
 <div>
-    @{
-        var parms = new Dictionary<string, string>
-{
-    { "From", null },
-
-};
-    }
+    
+    
     @Html.ActionLink("New Chat",
     "OpenChat",
      "ChatSessions",
-      new { From = "" }, null)
+      new { To = "", From=ViewData["user"] }, null)
 
 </div>
 <table class="table">
@@ -35,20 +30,26 @@
     </thead>
     <tbody>
 
-        @foreach (var item in Model)
+        @foreach (var item in Model)//is the chatters name in from or to? how to protect from duplicates
         {
             
-            var writer = new System.IO.StringWriter();
-            Html.DisplayFor(modelItem => item.From).WriteTo(writer, HtmlEncoder);
+            //var writerFrom = new System.IO.StringWriter();
+            //Html.DisplayFor(modelItem => item.From).WriteTo(writerFrom, HtmlEncoder);
             var params0 = new Dictionary<string, string>
     {
-        { "From",writer.ToString()},
+        { "From",item.From},{"To", item.To}
 
      };
             <tr>
                 <td>
-
+                    @if (item.To != ViewData["user"].ToString()) 
+                    {
+                        <a asp-action="OpenChat" asp-all-route-data="params0"> @Html.DisplayFor(modelItem => item.To)</a>
+                    }
+                    else
+                    {
                     <a asp-action="OpenChat" asp-all-route-data="params0"> @Html.DisplayFor(modelItem => item.From)</a>
+                    }
                 </td>
 
                 <td>

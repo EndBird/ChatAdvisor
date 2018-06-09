@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieMessenger.Models;
 using System.Web.Mvc;
+using Microsoft.AspNetCore.Session;
 namespace MovieMessenger.Controllers
 {
     public class LoginsController : Microsoft.AspNetCore.Mvc.Controller
     {
         private readonly MovieMessengerContext _context;
-
         public LoginsController(MovieMessengerContext context)
         {
             _context = context;
@@ -25,15 +25,16 @@ namespace MovieMessenger.Controllers
         [Microsoft.AspNetCore.Mvc.Route("ChatSessions")]
         public async Task<IActionResult> Login(string username, string pass)
         {
-            DbSet<Account> x = _context.Account;
-            foreach (var account in x)
+            DbSet<Account> accounts = _context.Account;
+            foreach (var account in accounts)
             {
                 if (account.Username == username & account.Password == pass)
                 {
 
-
                     ViewData["user"] = username;
-                    return View("/Views/ChatSessions/ChatsList.cshtml", await _context.ChatSession.ToListAsync());
+                    
+                    return View("/Views/ChatSessions/ChatsList.cshtml", 
+                        await _context.ChatSession.Where(x => (x.From == username || x.To == username)).ToListAsync());
 
                 }
             }

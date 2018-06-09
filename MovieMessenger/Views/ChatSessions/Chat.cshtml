@@ -1,67 +1,67 @@
 ﻿@model IEnumerable<MovieMessenger.Models.ChatSession>
-<script type="text/javascript">
-    var initChat = "";
-    var froom = "";
-    var chatTitle = "Chat";
 
-    @foreach (var item in Model)
+@{
+    ViewData["Title"] = "";
+    foreach (var item in Model)
     {
-        <text>
-            initChat = item.Chat;
-            froom = item.From;
-        </text>
-    }
-    if (initChat) {
-        document.getElementById("ChatSession").innerHTML = initChat;
-    }
-    else {//new chat
-        var froom = "Ong Tu";//dummy user for now.
-
+        ViewData["Title"] = "Chatting with: " + item.To;
 
     }
+    if (!ViewData["Title"].ToString().Contains("Chatting with:")) {
+        ViewData["Title"] = "Chat";
+    }
+    ///how to store persustant data?
+    ///
 
-</script>
-
-@ViewData["Title"] = chatTitle;
+}
 
 <h2>Chat</h2>
 <html>
 
 <body>
-    <div id="ChatSession" style="border-color:blue; width:150px;height:150px;overflow:auto;padding:5px;">
 
-    </div>
-    
 
-            <input name="message" id="message" type="text" />
-            <button onclick="sendMessage()" id="SendMessage" type="submit">Send</button>
-            <button type="submit" asp-action="Save" >Save Chat</button>
+    @{
+        bool inLoop = false;
+        foreach (var item in Model)
+        {
+            inLoop = true;
+            <div id="ChatSession" style="border-color:blue; width:150px;height:150px;overflow:auto;padding:5px;">
+                @Html.DisplayFor(modelItem => item.Chat)
+            </div>
+        }
+        if (!inLoop)
+        {
+            <div id="ChatSession" style="border-color:blue; width:150px;height:150px;overflow:auto;padding:5px;">
+            </div>
 
-            <script type="text/javascript">
+        }
+    }
 
-        
 
-                
-           //use javascript dictionary
-            var sendMessage=  function() {
 
-                document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + @ViewData["user"] + ": " + document.getElementById("message").value;
+        <input name="message" id="message" type="text" />
+        <button onclick="sendMessage()" id="SendMessage" type="submit">Send</button>
+        <button type="submit" asp-action="Save">Save Chat</button>
+
+        <script type="text/javascript">
+
+
+            //use javascript dictionary
+            var sendMessage = function () {
+
+                document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + document.cookie.split("=")[1] + ": " + document.getElementById("message").value;
                 document.getElementById("message").value = "";
                 var element = document.getElementById("ChatSession");
                 element.scrollTop = element.scrollHeight - element.clientHeight;
-               
+
 
             };
-                     
-            
+
+        </script>
 
 
 
-
-            </script>
-
-
-
-</body>
+    </body>
 
 </html>
