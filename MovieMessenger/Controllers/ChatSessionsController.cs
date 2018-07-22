@@ -56,7 +56,7 @@ namespace MovieMessenger.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,From,To,Chat")] ChatSession chatSession)
+        public async Task<IActionResult> Create([Bind("From,To,Chat")] ChatSession chatSession)
         {
             if (ModelState.IsValid)
             {
@@ -141,21 +141,37 @@ namespace MovieMessenger.Controllers
         // POST: ChatSessions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string relation)
         {
-            var chatSession = await _context.ChatSession.SingleOrDefaultAsync(m => m.ID == id);
+            var chatSession = await _context.ChatSession.SingleOrDefaultAsync(m => m.ToString() == relation);
             _context.ChatSession.Remove(chatSession);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ChatSessionExists(int id)
+        private bool ChatSessionExists(string relation)
         {
-            return _context.ChatSession.Any(e => e.ID == id);
+            return _context.ChatSession.Any(e => e.ToString() == relation);
+        }
+
+        [HttpPost]
+        public async Task UpdateChat(string From, string To, string message)
+        {
+            try
+            {
+               ChatSession chat = await _context.ChatSession.SingleAsync(m => m.From == From && m.To == To);
+               chat.Chat = chat.Chat + "\n" + From + " " + message;
+                _context.ChatSession.Update(chat);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                return; //add something later here. 
+            }
         }
 
         [HttpGet]
-        public IActionResult OpenChat(string To, string From)
+        public async Task<IActionResult> OpenChat(string To, string From, string message)
         {
             if (To == null)
             {
@@ -174,8 +190,9 @@ namespace MovieMessenger.Controllers
                         return View("/Views/ChatSessions/Chat.cshtml", chatTo);
                     }
                 }
-                IEnumerable<ChatSession> newChat = new ChatSession[] {new ChatSession() }; //what to put for new chat?
-                return View("/Views/ChatSessions/Chat.cshtml");
+                IEnumerable<ChatSession> newChat = new ChatSession[] {new ChatSession(From, To, "") }; //Assume its alex. what to put for new chat?
+                await Create(newChat.First());
+                return View("/Views/ChatSessions/Chat.cshtml", newChat);
             }
         }
  

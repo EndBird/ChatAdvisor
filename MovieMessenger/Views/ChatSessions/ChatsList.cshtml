@@ -15,7 +15,7 @@
     @Html.ActionLink("New Chat",
     "OpenChat",
      "ChatSessions",
-      new { To = "", From=ViewData["user"] }, null)
+      new { To = "Alex", From=ViewData["user"] }, null) <!--DEfault to alex for now-->
 
 </div>
 <table class="table">
@@ -54,7 +54,7 @@
 
                 <td>
 
-                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                    <a asp-action="Delete" asp-route-id="@item.ToString()">Delete</a>
                 </td>
             </tr>
         }

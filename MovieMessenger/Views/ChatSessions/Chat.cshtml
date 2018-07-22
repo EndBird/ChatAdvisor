@@ -17,7 +17,9 @@
 
 <h2>Chat</h2>
 <html>
-
+<head>
+    <script type="text/javascript" src="C:\Users\mlh27\Documents\VS2017\MovieMessenger\MovieMessenger\MovieMessenger\jquery-3.3.1.min.js"></script>
+</head>
 <body>
 
 
@@ -51,10 +53,12 @@
             var sendMessage = function () {
 
                 document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + document.cookie.split("=")[1] + ": " + document.getElementById("message").value;
-                document.getElementById("message").value = "";
+                
                 var element = document.getElementById("ChatSession");
                 element.scrollTop = element.scrollHeight - element.clientHeight;
-
+                $.post("/ChatSessions/UpdateChat", { To: "@ViewData["Title"].ToString().Split(' ')[2]", From: document.cookie.split("=")[1], message: document.getElementById("message").value}
+                );
+                document.getElementById("message").value = "";
 
             };
 

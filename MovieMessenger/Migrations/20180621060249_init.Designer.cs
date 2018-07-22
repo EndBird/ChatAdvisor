@@ -11,8 +11,8 @@ using System;
 namespace MovieMessenger.Migrations
 {
     [DbContext(typeof(MovieMessengerContext))]
-    [Migration("20180306031224_AccountInit1")]
-    partial class AccountInit1
+    [Migration("20180621060249_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,6 +33,23 @@ namespace MovieMessenger.Migrations
                     b.ToTable("Account");
                 });
 
+            modelBuilder.Entity("MovieMessenger.Models.ChatSession", b =>
+                {
+                    b.Property<string>("From");
+
+                    b.Property<string>("To");
+
+                    b.Property<string>("AccountUsername");
+
+                    b.Property<string>("Chat");
+
+                    b.HasKey("From", "To");
+
+                    b.HasIndex("AccountUsername");
+
+                    b.ToTable("ChatSession");
+                });
+
             modelBuilder.Entity("MovieMessenger.Models.Message", b =>
                 {
                     b.Property<int>("ID")
@@ -47,6 +64,13 @@ namespace MovieMessenger.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Message");
+                });
+
+            modelBuilder.Entity("MovieMessenger.Models.ChatSession", b =>
+                {
+                    b.HasOne("MovieMessenger.Models.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountUsername");
                 });
 #pragma warning restore 612, 618
         }

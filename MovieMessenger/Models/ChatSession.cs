@@ -1,21 +1,35 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace MovieMessenger.Models
 {
+    /*
+    public class ChatSessionContext : DbContext
+    {
+        public DbSet<ChatSession> ChatSessions { get; set; }
+
+       
+
+        public ChatSessionContext(DbContextOptions options) : base(options)
+        {
+        }
+    }
+    */
     public class ChatSession
     {   
         
         //public int ID { get; set; }
         [ForeignKey("Username")] //make from and to a key collectively so that we dont have duplicate. plus no worry about id
-        [Key, Column(Order =1)]
         public string From { get; set; }
         [ForeignKey("Username")]
-        [Key, Column(Order =2)]
         public string To { get; set; }
         public string Chat { get; set; }
         public Account Account { get; set; } //to tell server where to look for username

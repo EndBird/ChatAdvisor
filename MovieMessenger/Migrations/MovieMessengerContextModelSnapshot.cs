@@ -34,18 +34,15 @@ namespace MovieMessenger.Migrations
 
             modelBuilder.Entity("MovieMessenger.Models.ChatSession", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd();
+                    b.Property<string>("From");
+
+                    b.Property<string>("To");
 
                     b.Property<string>("AccountUsername");
 
                     b.Property<string>("Chat");
 
-                    b.Property<string>("From");
-
-                    b.Property<string>("To");
-
-                    b.HasKey("ID");
+                    b.HasKey("From", "To");
 
                     b.HasIndex("AccountUsername");
 
