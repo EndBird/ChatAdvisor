@@ -1,1 +1,1 @@
-The app works simply by loading it on Visual Studio and running it on localhost. By default, you are chatting with Alex, a dummy user. 
+The app works simply by loading it on Visual Studio and running it on localhost. By default, you are chatting with Alex, a dummy user. Although you need to create him first throught Signing up like any ordinary website
