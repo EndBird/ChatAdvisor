@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -17,6 +18,7 @@ namespace MovieMessenger.Controllers
         public ChatSessionsController(MovieMessengerContext context)
         {
             _context = context;
+            
         }
         
 
@@ -163,6 +165,8 @@ namespace MovieMessenger.Controllers
                chat.Chat = chat.Chat + "\n" + From + " " + message;
                 _context.ChatSession.Update(chat);
                 await _context.SaveChangesAsync();
+                
+                
             }
             catch
             {
