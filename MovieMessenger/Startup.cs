@@ -16,7 +16,8 @@ namespace MovieMessenger
 {
     public class Startup
     {
-        public static IApplicationBuilder staticApp;
+        public static IApplicationBuilder staticApp = null;
+        public static Dictionary<string, WebSocket> chatSockets = new Dictionary<string, WebSocket>() {};
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -51,17 +52,19 @@ namespace MovieMessenger
             app.UseWebSockets();
             app.Use(async (context, next) =>
             {
-                if (context.Request.Path == "/ws")
+                if (context.Request.Path.ToString().Contains("/ws"))
                 {
-                    if (context.WebSockets.IsWebSocketRequest)
-                    {
-                        WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                        await Echo(context, webSocket);
-                    }
-                    else
-                    {
-                        context.Response.StatusCode = 400;
-                    }
+                if (context.WebSockets.IsWebSocketRequest)
+                {
+                    WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                        
+                        chatSockets.Add(context.Request.Path.ToString().Split('/').Last(), webSocket);
+                    await Echo(context, webSocket);
+                }
+                else
+                {
+                    context.Response.StatusCode = 400;
+                }
                 }
                 else
                 {
@@ -85,10 +88,20 @@ namespace MovieMessenger
         {
             var buffer = new byte[1024 * 4];
             WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            string[] names = context.Request.Path.ToString().Split('/').Last().Split(new char[] {'%','7','C' });
             while (!result.CloseStatus.HasValue)
             {
-                await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+                
+                try
+                {
+                    string chatTo = names.Last() + "%7C"+ names.First();
+                    await chatSockets[chatTo].SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+                }
+                catch
+                {
 
+                }
+            
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
             }
             await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
