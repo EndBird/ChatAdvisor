@@ -175,6 +175,13 @@ namespace MovieMessenger.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> NewChatOptions(string user)
+        {
+            ViewData["user"] = user;
+            return View("/Views/ChatSessions/NewChatOptions.cshtml", await _context.Account.ToListAsync());
+        }
+
+        [HttpGet]
         public async Task<IActionResult> OpenChat(string To, string From, string message)
         {
             if (To == null)
@@ -185,8 +192,10 @@ namespace MovieMessenger.Controllers
             }   
             else
             {
+                ViewData["To"] = To;
+                ViewData["From"] = From;
                 DbSet<ChatSession> chats = _context.ChatSession;
-                foreach (ChatSession chat in chats)
+                foreach (ChatSession chat in chats) //currently chat is empty because its not saving. use updatechat.
                 {
                     if (chat.To == To && chat.From==From)
                     {
@@ -196,6 +205,7 @@ namespace MovieMessenger.Controllers
                 }
                 IEnumerable<ChatSession> newChat = new ChatSession[] {new ChatSession(From, To, "") }; //Assume its alex. what to put for new chat?
                 await Create(newChat.First());
+                
                 return View("/Views/ChatSessions/Chat.cshtml", newChat);
             }
         }

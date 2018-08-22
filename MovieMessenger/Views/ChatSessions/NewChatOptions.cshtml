@@ -1,0 +1,20 @@
+﻿@model IEnumerable<MovieMessenger.Models.Account>
+@{
+    ViewData["Title"] = "NewChat";
+    
+}
+
+
+<h2>NewChat</h2>
+
+@foreach (var account in Model)
+{
+
+    <div>
+        @Html.ActionLink("New Chat with " + account.Username,
+                "OpenChat",
+                 "ChatSessions",
+                  new { To = account.Username, From = ViewData["user"] }, null)
+    </div>
+
+}

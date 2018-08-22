@@ -140,7 +140,7 @@
             }
             socket.close(1000, "Closing from client");
         }
-
+        var chattingFrom = "@ViewData["From"]";
         sendButton.onclick = function () {
             if (!socket || socket.readyState != WebSocket.OPEN) {
                 alert("socket not connected");
@@ -151,13 +151,18 @@
                 '<td class="commslog-client">Client</td>' +
                 '<td class="commslog-server">Server</td>' +
                 '<td class="commslog-data">' + htmlEscape(data) + '</td></tr>';
-        }
+            document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + chattingFrom + ": " + data;
 
+            var element = document.getElementById("ChatSession");
+            element.scrollTop = element.scrollHeight - element.clientHeight;
+        }
+        var chattingWith = "@ViewData["To"]";
         connectButton.onclick = function () {
             stateLabel.innerHTML = "Connecting";
             socket = new WebSocket(connectionUrl.value);
             socket.onopen = function (event) {
                 updateState();
+                
                 commsLog.innerHTML += '<tr>' +
                     '<td colspan="3" class="commslog-data">Connection opened</td>' +
                     '</tr>';
@@ -174,6 +179,10 @@
                     '<td class="commslog-server">Server</td>' +
                     '<td class="commslog-client">Client</td>' +
                     '<td class="commslog-data">' + htmlEscape(event.data) + '</td></tr>';
+                document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + chattingWith + ": " + event.data;
+
+                var element = document.getElementById("ChatSession");
+                element.scrollTop = element.scrollHeight - element.clientHeight;
             };
         };
 

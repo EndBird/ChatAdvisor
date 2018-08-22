@@ -13,10 +13,10 @@
     
     
     @Html.ActionLink("New Chat",
-    "OpenChat",
+    "NewChatOptions",
      "ChatSessions",
-      new { To = "Alex", From=ViewData["user"] }, null) <!--DEfault to alex for now-->
-
+      new {user= ViewData["user"] }, null) <!--DEfault to alex for now-->
+    
 </div>
 <table class="table">
     <thead>
