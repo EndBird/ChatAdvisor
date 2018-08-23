@@ -89,8 +89,7 @@ namespace MovieMessenger.Controllers
         // POST: ChatSessions/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         /*
         public async Task<IActionResult> Edit(int id, [Bind("ID,From,To,Chat")] ChatSession chatSession)
         {
@@ -141,14 +140,17 @@ namespace MovieMessenger.Controllers
         }
 
         // POST: ChatSessions/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpGet]
+        
         public async Task<IActionResult> DeleteConfirmed(string relation)
         {
             var chatSession = await _context.ChatSession.SingleOrDefaultAsync(m => m.ToString() == relation);
             _context.ChatSession.Remove(chatSession);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            ViewData["user"] = relation.Split(" ")[0];
+            
+            return View("/Views/ChatSessions/ChatsList.cshtml",
+                await _context.ChatSession.Where(x => (x.From == ViewData["user"].ToString() || x.To == ViewData["user"].ToString())).ToListAsync());
         }
 
         private bool ChatSessionExists(string relation)
@@ -162,7 +164,7 @@ namespace MovieMessenger.Controllers
             try
             {
                ChatSession chat = await _context.ChatSession.SingleAsync(m => m.From == From && m.To == To);
-               chat.Chat = chat.Chat + "\n" + From + " " + message;
+               chat.Chat = chat.Chat + "<br>" + message;
                 _context.ChatSession.Update(chat);
                 await _context.SaveChangesAsync();
                 

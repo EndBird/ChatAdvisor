@@ -29,7 +29,7 @@
         {
             inLoop = true;
             <div id="ChatSession" style="border-color:blue; width:150px;height:150px;overflow:auto;padding:5px;">
-                @Html.DisplayFor(modelItem => item.Chat)
+                @Html.Raw(item.Chat)
             </div>
         }
         if (!inLoop)
@@ -146,7 +146,10 @@
                 alert("socket not connected");
             }
             var data = seMessage.value;
-            socket.send(data);
+           
+                socket.send(data);
+            $.post("/ChatSessions/UpdateChat", { To: chattingWith, From: chattingFrom, message: chattingFrom + ": " +data }
+            );
             commsLog.innerHTML += '<tr>' +
                 '<td class="commslog-client">Client</td>' +
                 '<td class="commslog-server">Server</td>' +
@@ -154,7 +157,7 @@
             document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + chattingFrom + ": " + data;
 
             var element = document.getElementById("ChatSession");
-            element.scrollTop = element.scrollHeight - element.clientHeight;
+                element.scrollTop = element.scrollHeight - element.clientHeight;
         }
         var chattingWith = "@ViewData["To"]";
         connectButton.onclick = function () {
@@ -180,7 +183,8 @@
                     '<td class="commslog-client">Client</td>' +
                     '<td class="commslog-data">' + htmlEscape(event.data) + '</td></tr>';
                 document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + chattingWith + ": " + event.data;
-
+                $.post("/ChatSessions/UpdateChat", { To: chattingWith, From: chattingFrom, message: chattingWith + ": "+ event.data}
+                );
                 var element = document.getElementById("ChatSession");
                 element.scrollTop = element.scrollHeight - element.clientHeight;
             };

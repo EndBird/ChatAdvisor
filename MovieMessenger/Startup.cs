@@ -18,6 +18,7 @@ namespace MovieMessenger
     {
         public static IApplicationBuilder staticApp = null;
         public static Dictionary<string, WebSocket> chatSockets = new Dictionary<string, WebSocket>() {};
+        public static MovieMessengerContext _context;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -99,7 +100,7 @@ namespace MovieMessenger
                 }
                 catch
                 {
-
+                    //do work here to automatically save the chat to the receviers account. 
                 }
             
                 result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);

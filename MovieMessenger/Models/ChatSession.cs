@@ -47,7 +47,7 @@ namespace MovieMessenger.Models
 
         public override string ToString()
         {
-            return this.From + " " + this.To;
+            return this.From + " "+ this.To;
         }
     }
 }

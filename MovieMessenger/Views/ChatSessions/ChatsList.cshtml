@@ -40,21 +40,26 @@
         { "From",item.From},{"To", item.To}
 
      };
+            var params1 = new Dictionary<string, string>
+    {
+        { "relation",item.ToString()}
+
+     };
             <tr>
                 <td>
                     @if (item.To != ViewData["user"].ToString()) 
                     {
-                        <a asp-action="OpenChat" asp-all-route-data="params0"> @Html.DisplayFor(modelItem => item.To)</a>
+                        <a asp-controller="ChatSessions" asp-action="OpenChat" asp-all-route-data="params0"> @Html.DisplayFor(modelItem => item.To)</a>
                     }
                     else
                     {
-                    <a asp-action="OpenChat" asp-all-route-data="params0"> @Html.DisplayFor(modelItem => item.From)</a>
+                    <a asp-controller="ChatSessions" asp-action="OpenChat" asp-all-route-data="params0"> @Html.DisplayFor(modelItem => item.From)</a>
                     }
                 </td>
 
                 <td>
 
-                    <a asp-action="Delete" asp-route-id="@item.ToString()">Delete</a>
+                    <a asp-controller="ChatSessions" asp-action="DeleteConfirmed" asp-all-route-data="params1">Delete</a>
                 </td>
             </tr>
         }

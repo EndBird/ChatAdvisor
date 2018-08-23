@@ -32,7 +32,7 @@ namespace MovieMessenger.Controllers
                 {
 
                     ViewData["user"] = username;
-                    
+                    Startup._context = _context;
                     return View("/Views/ChatSessions/ChatsList.cshtml", 
                         await _context.ChatSession.Where(x => (x.From == username || x.To == username)).ToListAsync());
 
