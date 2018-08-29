@@ -18,6 +18,7 @@ namespace MovieMessenger.Controllers
         public ChatSessionsController(MovieMessengerContext context)
         {
             _context = context;
+            Startup.chatSessionsController = this;
             
         }
         
@@ -153,7 +154,7 @@ namespace MovieMessenger.Controllers
                 await _context.ChatSession.Where(x => (x.From == ViewData["user"].ToString() || x.To == ViewData["user"].ToString())).ToListAsync());
         }
 
-        private bool ChatSessionExists(string relation)
+        public bool ChatSessionExists(string relation)
         {
             return _context.ChatSession.Any(e => e.ToString() == relation);
         }

@@ -49,5 +49,10 @@ namespace MovieMessenger.Models
         {
             return this.From + " "+ this.To;
         }
+
+        public override bool Equals(object obj)
+        {
+            return this.ToString() == (obj).ToString();
+        }
     }
 }

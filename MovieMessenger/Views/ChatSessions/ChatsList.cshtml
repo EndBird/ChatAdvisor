@@ -22,7 +22,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.From)
+                Chats
             </th>
 
             <th></th>
@@ -47,14 +47,11 @@
      };
             <tr>
                 <td>
-                    @if (item.To != ViewData["user"].ToString()) 
+                    @if (item.From == ViewData["user"].ToString()) 
                     {
-                        <a asp-controller="ChatSessions" asp-action="OpenChat" asp-all-route-data="params0"> @Html.DisplayFor(modelItem => item.To)</a>
+                        <a asp-controller="ChatSessions" asp-action="OpenChat" asp-all-route-data="params0"> @Html.DisplayFor(modelItem => item.From)</a>
                     }
-                    else
-                    {
-                    <a asp-controller="ChatSessions" asp-action="OpenChat" asp-all-route-data="params0"> @Html.DisplayFor(modelItem => item.From)</a>
-                    }
+                   
                 </td>
 
                 <td>

@@ -12,6 +12,7 @@ namespace MovieMessenger.Models
         public MovieMessengerContext (DbContextOptions<MovieMessengerContext> options)
             : base(options)
         {
+            
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
