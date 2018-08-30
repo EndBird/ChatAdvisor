@@ -15,7 +15,7 @@
     @Html.ActionLink("New Chat",
     "NewChatOptions",
      "ChatSessions",
-      new {user= ViewData["user"] }, null) <!--DEfault to alex for now-->
+      new {user= ViewData["user"] }, null) 
     
 </div>
 <table class="table">
@@ -45,20 +45,22 @@
         { "relation",item.ToString()}
 
      };
-            <tr>
-                <td>
-                    @if (item.From == ViewData["user"].ToString()) 
-                    {
-                        <a asp-controller="ChatSessions" asp-action="OpenChat" asp-all-route-data="params0"> @Html.DisplayFor(modelItem => item.From)</a>
-                    }
-                   
-                </td>
+        <tr>
+            @if (item.From == ViewData["user"].ToString())
+            {
+        <td>
 
-                <td>
+            <a asp-controller="ChatSessions" asp-action="OpenChat" asp-all-route-data="params0"> @item.ToString()</a>
+            
 
-                    <a asp-controller="ChatSessions" asp-action="DeleteConfirmed" asp-all-route-data="params1">Delete</a>
-                </td>
-            </tr>
+        </td>
+
+        <td>
+
+            <a asp-controller="ChatSessions" asp-action="DeleteConfirmed" asp-all-route-data="params1">Delete</a>
+        </td>
+            }
+        </tr>
         }
     </tbody>
 </table>

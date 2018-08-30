@@ -105,7 +105,7 @@ namespace MovieMessenger
                 string[] names = context.Request.Path.ToString().Split('/').Last().Split(new char[] { '%', '7', 'C' });
                 while (!result.CloseStatus.HasValue)
                 {
-
+                    await chatSessionsController.UpdateChat( names.First(), names.Last(), names.First() + ": " + System.Text.Encoding.Default.GetString(buffer));
                     try
                     {
                         string chatTo = names.Last() + "%7C" + names.First();
@@ -138,6 +138,7 @@ namespace MovieMessenger
                     result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 }
                 await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+                chatSockets.Remove(names.First() + "%7C" + names.Last());
             }
             
             

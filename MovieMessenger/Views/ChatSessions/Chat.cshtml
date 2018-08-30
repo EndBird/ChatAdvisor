@@ -148,8 +148,8 @@
             var data = seMessage.value;
            
                 socket.send(data);
-            $.post("/ChatSessions/UpdateChat", { To: chattingWith, From: chattingFrom, message: chattingFrom + ": " +data }
-            );
+            //$.post("/ChatSessions/UpdateChat", { To: chattingWith, From: chattingFrom, message: chattingFrom + ": " +data }
+            //);
             commsLog.innerHTML += '<tr>' +
                 '<td class="commslog-client">Client</td>' +
                 '<td class="commslog-server">Server</td>' +
