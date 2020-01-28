@@ -1,4 +1,4 @@
-﻿@model IEnumerable<MovieMessenger.Models.ChatSession>
+@model IEnumerable<MovieMessenger.Models.ChatSession>
 
 @{
     ViewData["Title"] = "";
@@ -145,7 +145,7 @@
             if (!socket || socket.readyState != WebSocket.OPEN) {
                 alert("socket not connected");
             }
-            var data = seMessage.value;
+            var data = chattingFrom + "/" + chattingWith + "/" + seMessage.value;
            
                 socket.send(data);
             //$.post("/ChatSessions/UpdateChat", { To: chattingWith, From: chattingFrom, message: chattingFrom + ": " +data }
@@ -153,8 +153,8 @@
             commsLog.innerHTML += '<tr>' +
                 '<td class="commslog-client">Client</td>' +
                 '<td class="commslog-server">Server</td>' +
-                '<td class="commslog-data">' + htmlEscape(data) + '</td></tr>';
-            document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + chattingFrom + ": " + data;
+                '<td class="commslog-data">' + htmlEscape(seMessage.value) + '</td></tr>';
+            document.getElementById("ChatSession").innerHTML = document.getElementById("ChatSession").innerHTML + "<br>" + chattingFrom + ": " + seMessage.value;
 
             var element = document.getElementById("ChatSession");
                 element.scrollTop = element.scrollHeight - element.clientHeight;
