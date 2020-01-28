@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -99,16 +99,19 @@ namespace MovieMessenger
             {
                 chatSessionsController = scope.ServiceProvider.GetRequiredService<ChatSessionsController>();
                 _context = scope.ServiceProvider.GetRequiredService<MovieMessengerContext>();
-                // rest of your code
+                // rest of your code 
                 var buffer = new byte[1024 * 4];
                 WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-                string[] names = context.Request.Path.ToString().Split('/').Last().Split(new char[] { '%', '7', 'C' });
+                string SentData = System.Text.Encoding.Default.GetString(buffer);
+                string[] names = SentData.Split('/');
+                string message = names.Last();
                 while (!result.CloseStatus.HasValue)
-                {
-                    await chatSessionsController.UpdateChat( names.First(), names.Last(), names.First() + ": " + System.Text.Encoding.Default.GetString(buffer));
+                {   
+
+                    await chatSessionsController.UpdateChat( names.First(), names[1], names.First() + ": " + message);
                     try
                     {
-                        string chatTo = names.Last() + "%7C" + names.First();
+                        string chatTo = names[1] + "%7C" + names.First();
                         await chatSockets[chatTo].SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
                     }
                     catch
@@ -117,11 +120,11 @@ namespace MovieMessenger
                         
                         //bool g = _context.ChatSession.Any(e => e.ToString() == relation); ;
                         //do work here to automatically save the chat to the receviers account. 
-                        if (chatSessionsController.ChatSessionExists(names.Last() + " " + names.First()))
+                        if (chatSessionsController.ChatSessionExists(names[1] + " " + names.First()))
                         {
-                            await chatSessionsController.UpdateChat(names.Last(), names.First(), names.First() + ": "+ System.Text.Encoding.Default.GetString(buffer));
+                            await chatSessionsController.UpdateChat(names[1], names.First(), names.First() + ": " + message);
                             /*
-                            ChatSession chat = _context.ChatSession.Single(e => e.ToString() == names.Last() + " " + names.First());
+                            ChatSession chat = _context.ChatSession.Single(e => e.ToString() == names[1]() + " " + names.First());
                             chat.Chat = chat.Chat + "<br>" + names.First() + ": " + System.Text.Encoding.Default.GetString(buffer);
                             _context.ChatSession.Update(chat);
                             await _context.SaveChangesAsync();
@@ -130,7 +133,7 @@ namespace MovieMessenger
                         }
                         else
                         {
-                            ChatSession chat = new ChatSession(names.Last(), names.First(), names.First() + ": " + System.Text.Encoding.Default.GetString(buffer));
+                            ChatSession chat = new ChatSession(names[1], names.First(), names.First() + ": " + message);
                             await chatSessionsController.Create(chat);
                         }
                     }
@@ -138,7 +141,7 @@ namespace MovieMessenger
                     result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
                 }
                 await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
-                chatSockets.Remove(names.First() + "%7C" + names.Last());
+                chatSockets.Remove(names.First() + "%7C" + names[1]);
             }
             
             
